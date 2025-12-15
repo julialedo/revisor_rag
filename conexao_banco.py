@@ -16,10 +16,6 @@ except ImportError:
 # I. CHAVES E CONFIGURAÇÕES DO ASTRA DB
 # -----------------------------------------------------------
 
-# Chaves Astra DB (adaptadas do seu notebook anexo)
-
-
-
 
 ASTRA_DB_APPLICATION_TOKEN = os.getenv("ASTRA_DB_APPLICATION_TOKEN")
 ASTRA_DB_API_ENDPOINT = os.getenv("ASTRA_DB_API_ENDPOINT")
