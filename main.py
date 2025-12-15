@@ -15,12 +15,10 @@ st.title("🛠️ Corretor de Texto ")
 st.markdown("**Fluxo de Duas Etapas:** 1. Revisão RAG (Classificação/Busca) ➡️ 2. Ajuste Incremental (Se houver)")
 st.markdown("---")
 
-# --- Verificação de Status da Chave OpenAI ---
-# Nota: A função get_embedding não é ideal para check, mas mantida para compatibilidade com o revisor.py
-if not get_embedding("teste"):
-    st.error("❌ ERRO CRÍTICO: Chave OpenAI INATIVA. A busca RAG falhará. Por favor, corrija a chave no 'revisor.py'.")
+if not os.getenv("OPENAI_API_KEY"):
+    st.error("❌ ERRO CRÍTICO: Chave OpenAI INATIVA. A busca RAG falhará. Verifique seus Streamlit Secrets.")
 else:
-    st.success("✅ Conexão OpenAI OK. Pronto para rodar o RAG.")
+    st.success("✅ Variáveis de Ambiente OK. Pronto para rodar o RAG.")
 st.markdown("---")
 
 # --- Variáveis de Estado (Simples) ---
