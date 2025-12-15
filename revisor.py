@@ -3,7 +3,7 @@ import os
 import json
 import hashlib
 from typing import List, Dict, Optional
-from dotenv import load_dotenv
+
 
 # 🚨 IMPORTAÇÃO DOS MÓDULOS DE LÓGICA
 try:
@@ -17,9 +17,8 @@ except ImportError as e:
     exit()
 
 
-load_dotenv() # Carrega as variáveis do arquivo .env localmente
 
-# ❌ REMOVA A CHAVE EM TEXTO CLARO AQUI!
+
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Define a chave de ambiente para o cliente OpenAI
