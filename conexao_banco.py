@@ -2,7 +2,7 @@ import requests
 import json
 from typing import List, Dict
 import os
-from dotenv import load_dotenv
+
 
 # 🚨 IMPORTANTE: Importa a função do arquivo classificacao.py
 try:
@@ -20,8 +20,6 @@ except ImportError:
 
 
 
-
-load_dotenv() # Carrega as variáveis do arquivo .env localmente
 
 ASTRA_DB_APPLICATION_TOKEN = os.getenv("ASTRA_DB_APPLICATION_TOKEN")
 ASTRA_DB_API_ENDPOINT = os.getenv("ASTRA_DB_API_ENDPOINT")
