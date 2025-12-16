@@ -1,20 +1,6 @@
 import streamlit as st
-import os
 # 🚨 IMPORTAÇÃO ATUALIZADA: Agora importa reescrever_revisor E ajuste_incremental
 from revisor import reescrever_revisor, get_embedding, ajuste_incremental 
-if st.secrets:
-    for key, value in st.secrets.items():
-        # Verifica se o valor é uma string e não o nome da seção
-        if isinstance(value, str):
-            os.environ[key] = value
-        # Se for uma seção (como [connections]), itera pelos itens
-        elif isinstance(value, dict):
-             for sub_key, sub_value in value.items():
-                os.environ[sub_key] = sub_value
-                
-    # Confirma o carregamento (Opcional, mas útil para debug)
-    if not os.getenv("OPENAI_API_KEY"):
-         st.error("❌ ERRO CRÍTICO: Chave OpenAI não encontrada. O app não funcionará.")
 
 # --- Configurações da Página ---
 st.set_page_config(
@@ -28,10 +14,12 @@ st.title("🛠️ Corretor de Texto ")
 st.markdown("**Fluxo de Duas Etapas:** 1. Revisão RAG (Classificação/Busca) ➡️ 2. Ajuste Incremental (Se houver)")
 st.markdown("---")
 
-if not os.getenv("OPENAI_API_KEY"):
-    st.error("❌ ERRO CRÍTICO: Chave OpenAI INATIVA. A busca RAG falhará. Verifique seus Streamlit Secrets.")
+# --- Verificação de Status da Chave OpenAI ---
+# Nota: A função get_embedding não é ideal para check, mas mantida para compatibilidade com o revisor.py
+if not get_embedding("teste"):
+    st.error("❌ ERRO CRÍTICO: Chave OpenAI INATIVA. A busca RAG falhará. Por favor, corrija a chave no 'revisor.py'.")
 else:
-    st.success("✅ Variáveis de Ambiente OK. Pronto para rodar o RAG.")
+    st.success("✅ Conexão OpenAI OK. Pronto para rodar o RAG.")
 st.markdown("---")
 
 # --- Variáveis de Estado (Simples) ---

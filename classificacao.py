@@ -2,24 +2,14 @@ import google.generativeai as genai
 import os
 import textwrap
 from typing import Optional
+from dotenv import load_dotenv
+# -----------------------------------------------------------
+# I. CHAVES E CONFIGURAÇÕES (Do seu código anexo)
+# -----------------------------------------------------------
+load_dotenv() # Carrega as variáveis do arquivo .env localmente
 
-
-
+# ❌ REMOVA A CHAVE EM TEXTO CLARO AQUI!
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        # Definindo o modelo como no seu notebook
-        model = genai.GenerativeModel('gemini-2.0-flash')
-        print("✅ Gemini configurado com sucesso.")
-    except Exception as e:
-        print(f"❌ ERRO: Falha ao configurar a API do Gemini. Erro: {e}")
-        model = None
-else:
-    print("❌ ERRO: Variável GEMINI_API_KEY não encontrada no ambiente.")
-    model = None
-
-
 
 try:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -94,3 +84,43 @@ REGRA IMPORTANTE:
         return f"ERRO ao classificar: {str(e)}"
     
 
+
+
+
+
+
+
+
+
+
+
+    ########## TESTE SE A FUNÇÃO ESTÁ FUNCIONANDO 
+
+def main():
+    """Função principal para testar a classificação no terminal."""
+
+    print("Objetivo: Identificar a coleção do Astra DB (PRODUTO, CULTURA, OUTROS).")
+    
+    # Exemplo de entrada, como no seu notebook (poderia ser input())
+    texto_para_teste = input("\nInsira o texto para classificar : ")
+    
+    if not texto_para_teste.strip():
+        print("\n🚫 Entrada vazia. Saindo do teste.")
+        return
+
+    print("\n🔍 Analisando texto...")
+    
+    resultado_colecao = classificar_texto(texto_para_teste)
+    
+    print("\n" + "=" * 60)
+    print(f"Texto Analisado: {texto_para_teste[:80]}...")
+    print(f"✅ COLEÇÃO IDENTIFICADA: {resultado_colecao}")
+    print("=" * 60)
+    
+    if resultado_colecao in ["PRODUTO", "CULTURA", "OUTROS"]:
+        print(f"\nPróximo passo: Usar a coleção '{resultado_colecao}' para buscar no Astra DB.")
+    else:
+        print("\n⚠️ Falha na classificação. A busca RAG não seria possível.")
+
+if __name__ == "__main__":
+    main()

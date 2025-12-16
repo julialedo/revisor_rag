@@ -2,7 +2,7 @@ import requests
 import json
 from typing import List, Dict
 import os
-
+from dotenv import load_dotenv
 
 # 🚨 IMPORTANTE: Importa a função do arquivo classificacao.py
 try:
@@ -16,6 +16,12 @@ except ImportError:
 # I. CHAVES E CONFIGURAÇÕES DO ASTRA DB
 # -----------------------------------------------------------
 
+# Chaves Astra DB (adaptadas do seu notebook anexo)
+
+
+
+
+load_dotenv() # Carrega as variáveis do arquivo .env localmente
 
 ASTRA_DB_APPLICATION_TOKEN = os.getenv("ASTRA_DB_APPLICATION_TOKEN")
 ASTRA_DB_API_ENDPOINT = os.getenv("ASTRA_DB_API_ENDPOINT")
@@ -68,3 +74,64 @@ class AstraDBClient:
 
 astra_client = AstraDBClient()
 
+# -----------------------------------------------------------
+# III. TESTE PRINCIPAL (main)
+# -----------------------------------------------------------
+
+def main():
+    """Função principal para testar a busca após a classificação."""
+
+    print("\n" + "=" * 70)
+    print("--- Teste de Fluxo: Classificação (Gemini) -> Busca Astra DB ---")
+    print("=" * 70)
+    
+    # 1. Obter Entrada do Usuário
+    texto_para_teste = input("\nInsira o texto para classificar e buscar (Ex: 'Pragas comuns da soja'): ")
+    
+    if not texto_para_teste.strip():
+        print("\n🚫 Entrada vazia. Saindo do teste.")
+        return
+
+    # 2. Classificação (Puxando a função do arquivo externo)
+    print("\n🔍 Chamando a Classificação...")
+    colecao_identificada = classificar_texto(texto_para_teste)
+    
+    print(f"\n✅ COLEÇÃO IDENTIFICADA: {colecao_identificada}")
+    
+    if colecao_identificada in ["PRODUTO", "CULTURA", "OUTROS"]:
+        print(f"Iniciando busca na coleção: {colecao_identificada}")
+    else:
+        print(f"❌ Não foi possível identificar uma coleção válida. Abortando busca.")
+        return
+
+    # 3. Simulação de Embedding (Manteremos a simulação pois a chave OpenAI está inválida)
+    # Lembre-se: SUBSTITUA POR UMA CHAMADA REAL DE EMBEDDING quando sua chave OpenAI estiver ativa.
+    simulated_vector = [0.0] * 1536 
+    simulated_vector[0] = 0.01 
+    
+    # 4. Busca Vetorial Usando o Resultado da Classificação
+    documentos_encontrados = astra_client.vector_search(
+        collection=colecao_identificada, 
+        vector=simulated_vector, 
+        limit=2
+    )
+    
+    if documentos_encontrados:
+        print("\n" + "=" * 70)
+        print("✅ FLUXO DE BUSCA (CLASSIFICAÇÃO -> ASTRA DB) BEM SUCEDIDO.")
+        print(f"Documentos encontrados: {len(documentos_encontrados)}")
+        print("\n--- Conteúdo do 1º Documento (Vetor Omitido) ---")
+        
+        doc_display = documentos_encontrados[0].copy()
+        if '$vector' in doc_display:
+            doc_display['$vector'] = "[Vetor Omitido]"
+            
+        print(json.dumps(doc_display, indent=2, ensure_ascii=False))
+        print("=" * 70)
+        
+    else:
+        print("\n❌ FLUXO DE BUSCA FALHOU. Verifique suas chaves Astra DB e a existência das coleções.")
+
+
+if __name__ == "__main__":
+    main()

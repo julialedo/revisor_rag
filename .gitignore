@@ -8,3 +8,21 @@
 # Excluir cache do Streamlit e Python
 __pycache__/
 .streamlit/
+.streamlit/secrets.toml
+.env
+.streamlit/secrets.toml
+.streamlit/secrets.toml
+.streamlit/*
+!.streamlit/config.toml
+
+__pycache__
+OPENAI_API_KEY
+ASTRA_DB_TOKEN
+.env
+
+.env
+__pycache__
+*.pyc
+*.env.local
+secrets*.txt
+.envrc
